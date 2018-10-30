@@ -8,8 +8,8 @@ Created on Tue Oct 30 23:02:20 2018
 from pysnmp.hlapi import *
 OID = '1.3.6.1.2.1.17.4.3.1.1'
 g=nextCmd(SnmpEngine(),
-           CommunityData('#DZ1SW1K!'),
-           UdpTransportTarget(('61.138.72.2', 161)),
+           CommunityData(comunity),
+           UdpTransportTarget((ip, 161)),
            ContextData(),
            ObjectType(ObjectIdentity(OID)))
 flag = True
