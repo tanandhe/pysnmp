@@ -4,8 +4,8 @@ Created on Tue Oct 30 23:02:20 2018
 
 @author: Administrator
 """
-
 from pysnmp.hlapi import *
+
 def snmpGet(ip,comunity,oid):
     '''
     函数用来实现snmpget的功能
@@ -50,7 +50,9 @@ def snmpWalk(ip,comunity,oid):
                CommunityData(comunity),
                UdpTransportTarget((ip, 161)),
                ContextData(),
-               ObjectType(ObjectIdentity(oid)))
+               ObjectType(ObjectIdentity(oid)),
+               ignoreNonIncreasingOid=True
+               )
     
     while flag:
         errorIndication,errorStatus,errorIndex,varBinds =next(g)
@@ -77,8 +79,8 @@ def snmpWalk(ip,comunity,oid):
     return result
 
 if __name__ == '__main__':
-#    interface = snmpWalk('61.138.72.2','#DZ1SW1K!','1.3.6.1.2.1.31.1.1.1.1')
-    interface = snmpGet('61.138.72.2','#DZ1SW1K!','1.3.6.1.2.1.31.1.1.1.1.194')
+    interface = snmpWalk('110.19.8.13','IP&zhwg%','1.3.6.1.4.1.2011.5.25.123.1.17.1')
+#    interface = snmpGet('61.138.72.2','#DZ1SW1K!','1.3.6.1.2.1.31.1.1.1.1.194')
     print (interface)
         
 
