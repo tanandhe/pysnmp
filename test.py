@@ -29,5 +29,5 @@ while flag:
             if OID not in str(varBind[0]):
                 flag = False
                 break
-            print(' = '.join([x.prettyPrint()cc for x in varBind]))
+            print(' = '.join([x.prettyPrint() for x in varBind]))
 
