@@ -23,14 +23,17 @@ def snmpGet(ip,comunity,oid):
     errorIndication,errorStatus,errorIndex,varBinds =next(g)
     if errorIndication:
         print(errorIndication)
-        return errorIndication
+#        return errorIndication
+        return None
     elif errorStatus:
         print('%s at %s' % (errorStatus.prettyPrint(),
                             errorIndex and varBinds[int(errorIndex) - 1][0] or '?'))
-        return errorStatus
+#        return errorStatus
+        return None
     elif errorIndex:
         print (errorIndex)
-        return errorIndex
+#        return errorIndex
+        return None
     else:
         for varBind in varBinds:
             result.append([str(x.prettyPrint()) for x in varBind])
@@ -74,7 +77,7 @@ def snmpWalk(ip,comunity,oid):
                 if oid not in str(varBind[0]):
                     flag = False                  
                     break
-                result.append([str(x.prettyPrint()) for x in varBind])
+                result.append([str(x) for x in varBind])
                 print(' = '.join([x.prettyPrint() for x in varBind]))
     return result
 
