@@ -6,6 +6,13 @@ Created on Tue Oct 30 23:02:20 2018
 """
 from pysnmp.hlapi import *
 
+def macConvert(mac='0.29.128.3.180.152'):
+    '''
+    MAC地址转换功能：把十进制形式的mac地址转换为16进制
+    '''
+    tmp = "-".join('{:0>4}'.format(hex(int(i))).replace('0x', '') for i in mac.split('.'))
+    return tmp.lower()
+
 def snmpGet(ip,comunity,oid):
     '''
     函数用来实现snmpget的功能
@@ -83,7 +90,7 @@ def snmpWalk(ip,comunity,oid):
 
 if __name__ == '__main__':
 #    interface = snmpWalk('110.19.8.13','','1.3.6.1.4.1.2011.5.25.123.1.17.1')
-    interface = snmpWalk('61.138.72.2','#DZ1SW1K!','1.3.6.1.2.1.17.1.4.1.2')
+    interface = snmpWalk('61.138.72.2','#DZ1SW1K!','1.3.6.1.2.1.17.4.3.1.2')
     print (interface)
         
 

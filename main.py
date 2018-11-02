@@ -24,7 +24,7 @@ if __name__ == "__main__":
     d = netDevice(conn=conn,ip='61.138.72.2',community='#DZ1SW1K!')
     print (d.name)
 #    d.insertIf()
-    d.addDotIndex()
+    d.insertMacInfo()
 #    p = infoProcess(conn)
 #    p.insertIf(interface)
     conn.close()
