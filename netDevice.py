@@ -5,7 +5,7 @@ Created on Thu Nov  1 17:52:07 2018
 @author: Administrator
 """
 from func import *
-import time
+import datetime
 
 class netDevice(object):
     def __init__(self,ip,community,nameoid="1.3.6.1.2.1.1.5.0"):
@@ -21,26 +21,26 @@ class netDevice(object):
         else:
             self.status = 'offline'
 
-    def insertIf(self，conn，interface,oid='1.3.6.1.2.1.31.1.1.1.1'):
+    def insertIf(self,conn,interface,oid='1.3.6.1.2.1.31.1.1.1.1'):
         '''
         获取设备端口名称和索引，入库。con:数据库打开对象
         '''
         if self.status != 'online':
-            break
-        currentTime = time.time()
+            return
+        currentTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cur = conn.cursor()
 
         for d in interface:
             #先根据设备IP地址和端口索引，判断数据库中是否存在索引            
-            sql = "select id,ifName from interface where deviceIp='%s' and ifIndex='%s'" % (self.ip,d[0])
+            sql = "select id,ifName from interface where deviceIp='%s' and ifIndex='%s'" % (self.ip,d[0].replace(oid+".",''))
             try:
                 res = cur.execute(sql)
-                id =  cur.fetchall()
+                id =  cur.fetchall()[0][0]
             except:
                 print ("查询端口失败")
             if res:
                 #如果存在，更新端口名称和时间信息
-                sql = "UPDATE interface SET ifName='%s' time='%f' WHERE id = '%d'" % (d[1],currentTime,id)
+                sql = "UPDATE interface SET ifName='%s',time='%s' WHERE id = %d" % (d[1],currentTime,id)
                 try:
                     cur.execute(sql)
                     conn.commit()
@@ -48,7 +48,7 @@ class netDevice(object):
                     conn.rollback()
                     print ("更新端口失败")
             else:
-                sql = "insert into interface(deviceIp,ifIndex,ifName,time) values ('%s','%s','%s',%f)" %\
+                sql = "insert into interface(deviceIp,ifIndex,ifName,time) values ('%s','%s','%s','%s')" %\
                  (self.ip,d[0].replace(oid+".",''),d[1],currentTime)
                 try:
                     cur.execute(sql)
