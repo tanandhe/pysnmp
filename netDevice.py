@@ -6,6 +6,7 @@ Created on Thu Nov  1 17:52:07 2018
 """
 from func import *
 import datetime
+import pymysql
 
 class netDevice(object):
     def __init__(self,conn,ip,community,nameoid="1.3.6.1.2.1.1.5.0"):
@@ -14,13 +15,56 @@ class netDevice(object):
         （网络不可达、团体字错误）
         '''
         self.conn = conn
+        cur = self.conn.cursor()  
         self.ip = ip
         self.community = community
-        self.name = snmpGet(self.ip,self.community,nameoid)[0][1]
-        if self.name != None:
+        tmp = snmpGet(self.ip,self.community,nameoid)
+        if tmp != None:
+            self.name = tmp[0][1]
             self.status = 'online'
         else:
+            self.name = None
             self.status = 'offline'
+        self.type = ""
+
+        #设备如果不存在就入库，如果存在更新设备       
+        try:
+            sql = "select id from deviceInfo where deviceIp='%s'" % (self.ip)
+            res = cur.execute(sql)
+        except :
+            print ("查询设备失败")
+        if res == 1 :
+            id = cur.fetchall()[0][0]
+            try:
+                #如果存在更新数据库
+                if self.status == 'online':
+                    sql = "update deviceInfo set deviceIp='%s',community='%s',sysName='%s',status='%s' where id=%d" \
+                    % (self.ip,self.community,self.name,self.status,id)
+                    cur.execute(sql)
+                    conn.commit()
+                else:
+                    sql = "update deviceInfo set status='%s' where id=%d" \
+                    % (self.status,id)
+                    cur.execute(sql)
+                    conn.commit()
+            except :
+                conn.rollback()
+                print ("更新设备失败")
+        else:
+            #如果不存在插入数据库
+            sql = "insert into deviceInfo(deviceIp,community,sysName,status,type) values ('%s','%s','%s','%s','%s')" \
+            % (self.ip,self.community,self.name,self.status,self.type)
+            try:
+                cur.execute(sql)
+                conn.commit()
+            except :
+                conn.rollback()
+                print ("插入设备失败")
+
+        cur.close()
+
+        
+        
     def insertIf(self,oid='1.3.6.1.2.1.31.1.1.1.1'):
         '''
         获取设备端口名称和索引，入库
@@ -107,9 +151,17 @@ class netDevice(object):
         cur.close()  
       
         
-if __name__ == '__main__':  
-#    ip="61.138.72.2"
-#    community="#DZ1SW1K!"
-#    myDevice = netDevice(ip,community,nameoid='1.3.6.1.2.1.1.5.0')
-#    print (myDevice.name)
-    print (myDevice.status)
+if __name__ == '__main__': 
+    conn = pymysql.connect(
+            host='127.0.0.1',
+            port=3306,
+            user='root',
+            passwd=' ',
+            db='test',
+            charset='utf8'
+            ) 
+    ip="61.138.72.3"
+    community="#DZ1SW1K!"
+    myDevice = netDevice(conn,ip,community,nameoid='1.3.6.1.2.1.1.5.0')
+    print (myDevice.name)
+#    print (myDevice.status)
