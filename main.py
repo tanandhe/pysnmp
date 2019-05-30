@@ -21,7 +21,7 @@ if __name__ == "__main__":
                 db='test',
                 charset='utf8'
                 )
-    d = netDevice(conn=conn,ip='61.138.72.2',community='#DZ1SW1K!')
+    d = netDevice(conn=conn,ip='61.138.72.2',community='public')
     print (d.name)
 #    d.insertIf()
     d.insertMacInfo()
