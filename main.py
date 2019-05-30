@@ -12,7 +12,6 @@ import pymysql
 
 if __name__ == "__main__":
     
-#    interface = snmpWalk('61.138.72.2','#DZ1SW1K!','1.3.6.1.2.1.31.1.1.1.1')
     conn = pymysql.connect(
                 host='127.0.0.1',
                 port=3306,
