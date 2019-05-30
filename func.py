@@ -90,7 +90,7 @@ def snmpWalk(ip,comunity,oid):
 
 if __name__ == '__main__':
 #    interface = snmpWalk('110.19.8.13','','1.3.6.1.4.1.2011.5.25.123.1.17.1')
-    interface = snmpWalk('61.138.72.2','#DZ1SW1K!','1.3.6.1.2.1.17.4.3.1.2')
+#    interface = snmpWalk('61.138.72.2',test','1.3.6.1.2.1.17.4.3.1.2')
     print (interface)
         
 
