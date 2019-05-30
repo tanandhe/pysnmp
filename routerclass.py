@@ -25,8 +25,8 @@ if __name__ == '__main__':
             db='test',
             charset='utf8'
             ) 
-    ip="110.19.8.13"
-    community="IP&zhwg%"
+    ip="192.168.1.1"
+    community="public"
     myDevice = hwSR(conn,ip,community,nameoid='1.3.6.1.2.1.1.5.0')
     print (myDevice.name)   
     arp = myDevice.arpInsert()
